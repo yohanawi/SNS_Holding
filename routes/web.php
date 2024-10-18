@@ -57,3 +57,6 @@ Route::prefix('admin/category')->middleware(['auth', 'admin'])->group(function (
 
 
 Route::get('/admin/order', [OrderController::class, 'index'])->name('admin.order');
+Route::get('/admin/order/show/{id}', [OrderController::class, 'show'])->name('admin.order.show');
+Route::put('/admin/order/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');
+Route::delete('/admin/order/delete/{id}', [OrderController::class, 'delete'])->name('admin.order.delete');
