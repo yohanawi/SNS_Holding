@@ -4,12 +4,13 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BestSellerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CatgoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -55,8 +56,14 @@ Route::prefix('admin/category')->middleware(['auth', 'admin'])->group(function (
     Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->name('admin.subcategory.destroy');
 });
 
+Route::prefix('admin.order')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('admin.order');
+    Route::get('/show/{id}', [OrderController::class, 'show'])->name('admin.order.show');
+    Route::put('/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');
+    Route::delete('/delete/{id}', [OrderController::class, 'delete'])->name('admin.order.delete');
+});
 
-Route::get('/admin/order', [OrderController::class, 'index'])->name('admin.order');
-Route::get('/admin/order/show/{id}', [OrderController::class, 'show'])->name('admin.order.show');
-Route::put('/admin/order/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');
-Route::delete('/admin/order/delete/{id}', [OrderController::class, 'delete'])->name('admin.order.delete');
+
+Route::get('/admin/message', [MessageController::class, 'index'])->name('admin.message');
+Route::get('/admin/messages/reply/{id}', [MessageController::class, 'reply'])->name('admin.messages.reply');
+Route::post('/admin/messages/reply/{id}', [MessageController::class, 'sendReply'])->name('admin.messages.sendReply');

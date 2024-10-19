@@ -34,20 +34,21 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <h5 class="card-title" style="color: #000">Orders</h5>
-                                <span class="fs-1">1</span>
+                                <span class="fs-1">{{ $orderCount }}</span>
                             </div>
-                            <a href="#" class="text-decoration-none fs-6" style="color: #000">Read More</a>
+                            <a href="{{ route('admin.order') }}" class="text-decoration-none fs-6" style="color: #000">Read
+                                More</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 3 -->
                 <div class="col">
-                    <div class="shadow-sm card h-100 bg-info">
+                    <div class="shadow-sm card h-100 bg-success">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
-                                <h5 class="card-title" style="color: #000">Users</h5>
-                                <span class="fs-1">1</span>
+                                <h5 class="card-title" style="color: #000">Completed</h5>
+                                <span class="fs-1">{{ $completedOrdersCount }}</span>
                             </div>
                             <a href="#" class="text-decoration-none fs-6" style="color: #000">Read More</a>
                         </div>
@@ -55,20 +56,6 @@
                 </div>
 
                 <!-- Card 4 -->
-                <div class="col">
-                    <div class="shadow-sm card h-100 bg-success">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title" style="color: #000">Completed</h5>
-                                <span class="fs-1">1</span>
-                            </div>
-
-                            <a href="#" class="text-decoration-none fs-6" style="color: #000">Read More</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
                 <div class="col">
                     <div class="shadow-sm card h-100 bg-danger">
                         <div class="card-body">

@@ -40,13 +40,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('editor') ? 'active' : '' }}" href="#">
-                        {{ __('Users') }}
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('message') ? 'active' : '' }}" href="#">
+                    <a class="nav-link {{ request()->routeIs('message') ? 'active' : '' }}"
+                        href="{{ route('admin.message') }}">
                         {{ __('Messages') }}
                     </a>
                 </li>
@@ -93,19 +88,15 @@
 <style>
     .nav-link {
         color: #000;
-        /* Default color */
         transition: color 0.3s ease-in-out;
     }
 
     .nav-link:hover {
         color: red;
-        /* Color on hover */
     }
 
     .nav-link.active {
         color: red;
-        /* Color for the active link */
         font-weight: bold;
-        /* Optional: to make the active link bold */
     }
 </style>
