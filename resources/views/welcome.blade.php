@@ -198,15 +198,15 @@
         <section>
             <div class="container mt-5 mb-5 text-center">
                 <h2 class="mb-5 fw-bold text-uppercase">Explore Your Interrests</h2>
-                {{-- @if ($products->count() > 0) --}}
-                <div class="gap-4 row justify-content-center">
-                    {{-- @foreach ($products as $product)
+                @if ($products->count() > 0)
+                    <div class="gap-4 row justify-content-center">
+                        @foreach ($products as $product)
                             @include('partial.product_card')
-                        @endforeach --}}
-                </div>
-                {{-- @else
+                        @endforeach
+                    </div>
+                @else
                     <p class="text-center">No products available.</p>
-                @endif --}}
+                @endif
             </div>
         </section>
     </div>

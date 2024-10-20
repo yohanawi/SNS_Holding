@@ -1,6 +1,6 @@
  <!-- product card-->
  <div class="mb-4 card product-card" style="width: 18rem;">
-     <a href="{{ route('product.quick_view', $product->id) }}" class="text-decoration-none text-dark">
+     <a href="{{ route('admin.product.quick_view', $product->id) }}" class="text-decoration-none text-dark">
          <div class="discount-badge">{{ $product->discount }}% OFF</div>
          <img src="{{ asset('storage/' . $product->image01) }}" class="card-img-top"
              style="height: 250px; object-fit: cover;" alt="product images">

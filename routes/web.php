@@ -5,6 +5,7 @@ use App\Http\Controllers\BestSellerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -13,9 +14,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -67,3 +66,6 @@ Route::prefix('admin.order')->middleware(['auth', 'admin'])->group(function () {
 Route::get('/admin/message', [MessageController::class, 'index'])->name('admin.message');
 Route::get('/admin/messages/reply/{id}', [MessageController::class, 'reply'])->name('admin.messages.reply');
 Route::post('/admin/messages/reply/{id}', [MessageController::class, 'sendReply'])->name('admin.messages.sendReply');
+
+
+Route::get('/product/quick_view/{id}', [ProductController::class, 'quickView'])->name('admin.product.quick_view');

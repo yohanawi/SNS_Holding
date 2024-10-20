@@ -2,7 +2,7 @@
     <!--navigation bar-->
     <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-            <a class="navbar-brand ms-5" href="#">
+            <a class="navbar-brand ms-5" href="{{ route('welcome') }}">
                 <img src="{{ url('images/LOGO.png') }}" alt="" width="40" height="40">
                 <span class="text-dark text-uppercase fw-bold font-nunito">SNS Holdings</span>
             </a>

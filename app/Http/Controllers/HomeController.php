@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Products;
+use Illuminate\Http\Request;
 
-abstract class Controller
+class HomeController extends Controller
 {
     public function index()
     {

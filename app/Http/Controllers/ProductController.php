@@ -9,7 +9,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.products');
+        $products = Products::all();
+        return view('pages.admin.products', compact('products'));
     }
 
     public function store(Request $request)
@@ -137,5 +138,12 @@ class ProductController extends Controller
         $product = Products::findOrFail($id);
         $product->delete();
         return redirect()->route('admin.product.show')->with('success', 'Product deleted successfully!');
+    }
+
+    public function quickView($id)
+    {
+        $product = Products::findOrFail($id);
+
+        return view('pages.users.quick_view', compact('product'));
     }
 }
