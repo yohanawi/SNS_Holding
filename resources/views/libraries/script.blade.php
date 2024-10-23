@@ -140,13 +140,13 @@
 
 <script>
     function increaseQuantity() {
-        var quantityInput = $('#quantity-input');
+        var quantityInput = $('#quantity');
         var currentValue = parseInt(quantityInput.val());
         quantityInput.val(currentValue + 1); // Increase value by 1
     }
 
     function decreaseQuantity() {
-        var quantityInput = $('#quantity-input');
+        var quantityInput = $('#quantity');
         var currentValue = parseInt(quantityInput.val());
         if (currentValue > 1) {
             quantityInput.val(currentValue - 1); // Decrease value by 1, but not below 1

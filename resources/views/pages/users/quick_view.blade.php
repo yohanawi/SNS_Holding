@@ -77,38 +77,46 @@
                     </ul>
                 </div>
                 <div class="container mt-4">
-                    <div class="mb-3 row">
-                        <div class="col-12">
-                            <label class="fw-bold me-3">Sizes:</label>
-                            <span class="text-muted">Choose an Option</span>
-                            <div class="mt-2">
-                                @foreach (['S', 'M', 'L', 'XL', 'XXL'] as $size)
-                                    <button class="btn btn-outline-secondary btn-sm size-btn"
-                                        data-size="{{ $size }}" data-product-id="{{ $product->id }}">
-                                        {{ $size }}
-                                    </button>
-                                @endforeach
-                            </div>
-                            <div id="stock-status" class="mt-3"></div>
-                        </div>
-                    </div>
+                    <form action="{{ route('customer.cart.addToCart') }}" method="POST">
+                        @csrf
+                        <div class="mb-3 row">
+                            <div class="col-12">
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" id="selected-size" name="size" required>
 
-
-                    <div class="row align-items-center">
-                        <div class="col-6 col-md-3">
-                            <label class="mb-1 fw-bold">Quantity :</label>
-                            <div class="rounded input-group" style="border: 1px solid #030303;">
-                                <button class="btn" type="button" onclick="decreaseQuantity()">-</button>
-                                <input type="text" id="quantity-input" class="text-center form-control" value="1"
-                                    aria-label="Quantity">
-                                <button class="btn" type="button" onclick="increaseQuantity()">+</button>
+                                <label class="fw-bold me-3">Sizes:</label>
+                                <span class="text-muted">Choose an Option</span>
+                                <div class="mt-2">
+                                    @foreach (['S', 'M', 'L', 'XL', 'XXL'] as $size)
+                                        <label for="size_{{ $size }}"></label>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm size-btn"
+                                            data-size="{{ $size }}" data-product-id="{{ $product->id }}">
+                                            {{ $size }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                                <div id="stock-status" class="mt-3"></div>
                             </div>
                         </div>
-                        <div class="gap-2 mt-4 col-2 col-md-6 d-flex justify-content-start">
-                            <button class="btn btn-dark ">Add to Cart</button>
-                            <button class="btn btn-warning">Buy Now</button>
+
+                        <div class="row align-items-center">
+                            <div class="col-6 col-md-3">
+                                <label class="mb-1 fw-bold">Quantity :</label>
+                                <div class="rounded input-group" style="border: 1px solid #030303;">
+                                    <button class="btn" type="button" onclick="decreaseQuantity()">-</button>
+                                    <input type="text" id="quantity" name="quantity" class="text-center form-control"
+                                        value="1" aria-label="Quantity" required>
+                                    <button class="btn" type="button" onclick="increaseQuantity()">+</button>
+                                </div>
+                            </div>
+                            <div class="gap-2 mt-4 col-2 col-md-6 d-flex justify-content-start">
+                                <button class="btn btn-dark" onclick="addToCart({{ $product->id }})">Add to
+                                    Cart</button>
+
+                                <button class="btn btn-warning">Buy Now</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     <hr />
                     <p>Category : <span class="text-primary text-capitalize"> {{ $product->category }}</span></p>
                 </div>
@@ -272,9 +280,51 @@
         .size-btn {
             width: 50px;
         }
+
+        #stock-status {
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 @endpush
 
 @push('js')
-    <script></script>
+    <script>
+        document.querySelectorAll('.size-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const size = this.dataset.size;
+                const productId = this.dataset.productId;
+                const stockStatus = document.getElementById('stock-status');
+
+                fetch(`/product/stock/${productId}/${size}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.stock !== undefined) {
+                            stockStatus.innerHTML =
+                                `<span class="text-success">${data.message} (Available: ${data.stock})</span>`;
+                        } else {
+                            stockStatus.innerHTML = `<span class="text-danger">${data.message}</span>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching stock:', error);
+                        stockStatus.innerHTML =
+                            `<span class="text-danger">Error fetching stock status</span>`;
+                    });
+            });
+        });
+
+        document.querySelectorAll('.size-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove 'active' class from all buttons
+                document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+
+                // Add 'active' class to the clicked button
+                this.classList.add('active');
+
+                // Store the selected size in the hidden input field
+                document.getElementById('selected-size').value = this.getAttribute('data-size');
+            });
+        });
+    </script>
 @endpush

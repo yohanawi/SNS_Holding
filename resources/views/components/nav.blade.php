@@ -77,6 +77,11 @@
                             <a class="nav-link" href="{{ route('customer.cart') }}">
                                 <img class="me-1"
                                     src="https://img.icons8.com/?size=30&id=59997&format=png&color=1A1A1A" />Cart
+                                @if (isset($cartCount) && $cartCount > 0)
+                                    <span class="text-white badge bg-danger ms-1">{{ $cartCount }}</span>
+                                @else
+                                    <span class="ms-1">0</span>
+                                @endif
                             </a>
                         </li>
 

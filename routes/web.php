@@ -69,3 +69,12 @@ Route::post('/admin/messages/reply/{id}', [MessageController::class, 'sendReply'
 
 
 Route::get('/product/quick_view/{id}', [ProductController::class, 'quickView'])->name('admin.product.quick_view');
+Route::get('/product/stock/{id}/{size}', [ProductController::class, 'checkStock']);
+
+
+Route::post('/customer/cart/add', [CartController::class, 'addToCart'])->name('customer.cart.addToCart');
+Route::post('/customer/cart/update', [CartController::class, 'update'])->name('customer.cart.update');
+Route::post('/customer/cart/remove', [CartController::class, 'remove'])->name('customer.cart.remove');
+
+Route::get('/customer/chekout', [CartController::class, 'chekout'])->name('customer.chekout');
+// Route::post('/customer/placeOrder', [CartController::class, 'placeOrder'])->name('customer.placeOrder');

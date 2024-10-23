@@ -146,4 +146,27 @@ class ProductController extends Controller
 
         return view('pages.users.quick_view', compact('product'));
     }
+
+    public function checkStock($id, $size)
+    {
+        $product = Products::findOrFail($id);
+        $sizeColumn = match ($size) {
+            'S' => 'quantity_S',
+            'M' => 'quantity_M',
+            'L' => 'quantity_L',
+            'XL' => 'quantity_XL',
+            'XXL' => 'quantity_XXL',
+            default => null,
+        };
+
+        if ($sizeColumn && isset($product->$sizeColumn)) {
+            $stock = $product->$sizeColumn;
+            return response()->json([
+                'stock' => $stock,
+                'message' => $stock > 0 ? 'In Stock' : 'Out of Stock',
+            ]);
+        }
+
+        return response()->json(['message' => 'Invalid Size'], 400);
+    }
 }

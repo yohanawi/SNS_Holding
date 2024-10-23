@@ -14,7 +14,7 @@
                  <p class="mb-0 fw-bold">${{ $product->new_price }}</p>
                  <p class="mb-0 old-price">${{ $product->price }}</p>
                  <p class="mb-0">{{ $product->sold }}+ sold</p>
-                 <a href="#" class="btn btn-outline-dark btn-sm"><i class="fa fa-cart-plus"></i></a>
+                 {{-- <a href="#" class="btn btn-outline-dark btn-sm"><i class="fa fa-cart-plus"></i></a> --}}
              </div>
              <div class="d-flex justify-content-center align-items-center">
                  <span class="badge text-bg-primary">Primary</span>
