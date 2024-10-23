@@ -12,25 +12,32 @@
                     <div class="cart_items">
                         @foreach ($products as $index => $product)
                             <div class="mb-4 product_item row align-items-center">
-                                <div class="col-1" style="width: 3%">
-                                    <input type="checkbox" class="product-checkbox">
+                                <div class="col-1" style="width: 3%;">
+                                    <input type="checkbox" class="product-checkbox" data-price="{{ $product->price }}"
+                                        data-quantity="{{ $cartItems[$index]->quantity }}">
                                 </div>
                                 <div class="product_image col-2">
-                                    <img src="{{ asset('images/' . $product->image) }}" alt="Product Image"
+                                    <img src="{{ asset('storage/' . $product->image01) }}" alt="Product Image"
                                         class="img-fluid" style="max-width: 150px; height: 150px;">
                                 </div>
                                 <div class="product_details col-8">
-                                    <h6>{{ $product->name }}</h6>
-                                    <p>{{ $product->description }}</p>
+                                    <h6>{{ $product->product_name }}</h6>
+                                    <p class="card-text text-muted text-truncate" style="max-width: 200px;">
+                                        {{ $product->product_details }}</p>
                                     <div class="justify-between row">
-                                        <div class="mt-2 col">
+                                        <div class="col">
                                             <p>Price: ${{ number_format($product->price, 2) }}</p>
                                         </div>
                                         <div class="col text-end">
                                             <p>Quantity:
                                                 <select name="quantity" class="quantity-select"
-                                                    data-id="{{ $product->id }}">
-                                                    <option selected>{{ $cartItems[$index]->quantity }}</option>
+                                                    data-id="{{ $cartItems[$index]->id }}">
+                                                    @for ($i = 1; $i <= 99; $i++)
+                                                        <option value="{{ $i }}"
+                                                            {{ $i == $cartItems[$index]->quantity ? 'selected' : '' }}>
+                                                            {{ $i }}
+                                                        </option>
+                                                    @endfor
                                                 </select>
                                             </p>
                                         </div>
@@ -49,6 +56,8 @@
                         @endforeach
                     </div>
                 </div>
+
+                <!-- Order Summary -->
                 <div class="col">
                     <p class="fw-bold">Order Summary</p>
                     <div class="product_prices">
@@ -57,13 +66,13 @@
                                 <p>Item Total: </p>
                                 <p>Item Discount: </p>
                                 <hr>
-                                <p>Estimated total ({{ $products->count() }} items) </p>
+                                <p>Estimated total (<span id="item-count">0</span> items)</p>
                             </div>
                             <div class="col-4 text-end">
-                                <p>$30.49</p> <!-- Replace with dynamic calculation if needed -->
-                                <p>-$25.51</p>
+                                <p id="item-total">$0.00</p>
+                                <p id="item-discount">-$0.00</p>
                                 <hr>
-                                <span>$4.98</span> <!-- Replace with total -->
+                                <span id="estimated-total">$0.00</span>
                             </div>
                         </div>
                         <span class="text-muted">Taxes and delivery fees</span>
@@ -84,14 +93,34 @@
 
 @push('js')
     <script>
-        // Generate option tags from 1 to 99 for each product quantity select element
-        document.querySelectorAll('.quantity-select').forEach(selectElement => {
-            for (let i = 1; i <= 99; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.text = i;
-                selectElement.appendChild(option);
-            }
+        // Generate options from 1 to 99 for quantity select
+        document.querySelectorAll('.quantity-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const cartItemId = this.dataset.id;
+                const newQuantity = this.value;
+
+                fetch('{{ route('customer.cart.update') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: JSON.stringify({
+                            id: cartItemId,
+                            quantity: newQuantity
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Quantity updated successfully!');
+                            location.reload(); // Optional: Refresh to update totals
+                        } else {
+                            alert('Failed to update quantity.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
         });
 
         // Select All checkbox functionality
@@ -100,6 +129,61 @@
             document.querySelectorAll('.product-checkbox').forEach(checkbox => {
                 checkbox.checked = isChecked;
             });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const productCheckboxes = document.querySelectorAll('.product-checkbox');
+            const quantitySelects = document.querySelectorAll('.quantity-select');
+
+            // Elements for displaying totals
+            const itemTotalEl = document.getElementById('item-total');
+            const itemDiscountEl = document.getElementById('item-discount');
+            const estimatedTotalEl = document.getElementById('estimated-total');
+            const itemCountEl = document.getElementById('item-count');
+            const checkoutCountEl = document.getElementById('checkout-count');
+
+            const DISCOUNT_RATE = 0.1; // 10% discount
+
+            // Function to calculate totals
+            function calculateTotals() {
+                let totalPrice = 0;
+                let itemCount = 0;
+
+                productCheckboxes.forEach((checkbox) => {
+                    if (checkbox.checked) {
+                        const quantity = parseInt(
+                            checkbox.closest('.product_item').querySelector('.quantity-select')
+                            .value
+                        );
+                        const price = parseFloat(checkbox.dataset.price);
+                        totalPrice += price * quantity;
+                        itemCount += quantity;
+                    }
+                });
+
+                const discount = totalPrice * DISCOUNT_RATE;
+                const estimatedTotal = totalPrice - discount;
+
+                // Update the UI with calculated values
+                itemTotalEl.textContent = `$${totalPrice.toFixed(2)}`;
+                itemDiscountEl.textContent = `-$${discount.toFixed(2)}`;
+                estimatedTotalEl.textContent = `$${estimatedTotal.toFixed(2)}`;
+                itemCountEl.textContent = itemCount;
+                checkoutCountEl.textContent = itemCount;
+            }
+
+            // Event listeners for checkboxes and quantity selects
+            productCheckboxes.forEach((checkbox) =>
+                checkbox.addEventListener('change', calculateTotals)
+            );
+
+            quantitySelects.forEach((select) =>
+                select.addEventListener('change', calculateTotals)
+            );
+
+            // Initial calculation on page load
+            calculateTotals();
         });
     </script>
 @endpush
@@ -110,16 +194,11 @@
             display: inline-block;
             padding: 0.375rem 1.75rem 0.375rem 0.75rem;
             font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
             color: #495057;
             background-color: #fff;
-            background-clip: padding-box;
             border: 1px solid #ced4da;
             border-radius: 0.375rem;
-            appearance: none;
-            position: relative;
-            background-image: url('data:image/svg+xml;charset=UTF8,%3Csvg xmlns%3D%27http://www.w3.org/2000/svg%27 width%3D%2716%27 height%3D%2716%27 fill%3D%27none%27 stroke%3D%27%23495057%27 stroke-linecap%3D%27round%27 stroke-linejoin%3D%27round%27 stroke-width%3D%272%27 class%3D%27feather feather-chevron-down%27 viewBox%3D%270 0 24 24%27%3E%3Cpath d%3D%27M6 9l6 6 6-6%27/%3E%3C/svg%3E');
+            background-image: url('data:image/svg+xml;charset=UTF8,%3Csvg...%3E');
             background-repeat: no-repeat;
             background-position: right 0.75rem center;
             background-size: 16px 12px;

@@ -54,7 +54,10 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-2">
-                    <span class="text-danger font-weight-bold fs-2">Rs. {{ $product->price }}</span>
+                    @php
+                        $new_price = $product->price - ($product->price * $product->discount) / 100;
+                    @endphp
+                    <span class="text-danger font-weight-bold fs-2">Rs. {{ number_format($new_price, 2) }}</span>
                     <del class="text-muted ps-3">Rs. {{ $product->price }}</del>
                 </div>
                 <hr />

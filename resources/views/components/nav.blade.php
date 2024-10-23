@@ -42,27 +42,10 @@
                                     <div class="col-3">
                                         {{-- Category Items --}}
                                         @foreach ($categories as $category)
-                                            <div class="category-item">
-                                                <a class="dropdown-item fw-bold" href="#"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#subcategories-{{ $category->id }}"
-                                                    aria-expanded="false">
+                                            <div class="category-item" data-category-id="{{ $category->id }}">
+                                                <a class="dropdown-item fw-bold" href="#">
                                                     {{ $category->category }}
                                                 </a>
-                                                <div class="collapse" id="subcategories-{{ $category->id }}">
-                                                    <div class="subcategories">
-                                                        @foreach ($category->subcategories as $subcategory)
-                                                            <div class="mb-2 subcategory_ d-flex align-items-center">
-                                                                <img src="{{ $subcategory->image }}"
-                                                                    alt="{{ $subcategory->subcategory }}"
-                                                                    class="subcategory-image me-2"
-                                                                    style="width: 30px; height: 30px;">
-                                                                <a class="dropdown-item"
-                                                                    href="#">{{ $subcategory->name }}</a>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -70,26 +53,30 @@
                                         <div class="vl"></div>
                                     </div>
                                     <div class="col-8">
-                                        <div class="row">
-                                            {{-- Subcategory Items --}}
-                                            @foreach ($categories as $category)
-                                                <div class="mb-3 subcategory-item col-6">
+                                        {{-- Subcategories will be dynamically shown here --}}
+                                        @foreach ($categories as $category)
+                                            <div class="subcategories collapse" id="subcategories-{{ $category->id }}">
+                                                <div class="row row-cols-8 g-3">
                                                     @foreach ($category->subcategories as $subcategory)
-                                                        <div class="mb-2 subcategory_ d-flex align-items-center">
-                                                            <img src="{{ $subcategory->image }}"
-                                                                alt="{{ $subcategory->subcategory }}"
-                                                                class="subcategory-image me-2"
-                                                                style="width: 30px; height: 30px;">
-                                                            <a class="dropdown-item"
-                                                                href="#">{{ $subcategory->name }}</a>
+                                                        <div class="text-center col">
+                                                            <a class="dropdown-item d-block" href="#">
+                                                                <img src="{{ asset('storage/' . $subcategory->image) }}"
+                                                                    alt="{{ $subcategory->subcategory }}"
+                                                                    class="rounded-circle"
+                                                                    style="width: 80px; height: 80px; object-fit: cover;">
+                                                                <br />
+                                                                {{ $subcategory->subcategory }}
+                                                            </a>
                                                         </div>
                                                     @endforeach
                                                 </div>
-                                            @endforeach
-                                        </div>
+                                            </div>
+                                        @endforeach
+                                        {{-- {{ asset('storage/' . $product->image01) }} --}}
                                     </div>
                                 </div>
                             </ul>
+
                         </li>
                     </div>
 
@@ -277,45 +264,66 @@
             alert('Please enter your email.');
         }
     });
+
+
+
+
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('mouseenter', (event) => {
+            const categoryId = event.currentTarget.dataset.categoryId;
+
+            // Hide all other subcategory divs
+            document.querySelectorAll('.subcategories').forEach(subcat => {
+                subcat.classList.remove('show');
+            });
+
+            // Show the relevant subcategory div
+            const targetSubcategory = document.getElementById(`subcategories-${categoryId}`);
+            if (targetSubcategory) {
+                targetSubcategory.classList.add('show');
+            }
+        });
+    });
 </script>
 
 <style>
     .vl {
         border-left: 1px solid #ddd;
-        /* Vertical line styling */
-        height: auto;
-        /* Automatic height */
-        margin: 0 15px;
-        /* Spacing around the line */
+        height: 100%;
     }
 
-    .subcategory-title {
-        font-weight: bold;
-        /* Make subcategory titles bold */
-        margin-bottom: 10px;
-        /* Space below the title */
-        color: #333;
-        /* Darker text color */
+    .category-item:hover {
+        background-color: #f1f1f1;
+        border-radius: 5px;
     }
 
-    .subcategory_ {
+    #subcategory-container {
+        min-height: 300px;
+        background-color: #fafafa;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+    }
+
+    .subcategories img {
+        border: 2px solid #ddd;
         padding: 5px;
-        /* Spacing around subcategory items */
-        transition: background-color 0.3s;
-        /* Smooth transition for hover */
+        transition: transform 0.3s ease;
     }
 
-    .subcategory_ a {
+    .subcategories img:hover {
+        transform: scale(1.1);
+        /* Zoom effect on hover */
+    }
+
+    .subcategories a {
+        font-weight: 500;
+        color: #333;
         text-decoration: none;
-        /* Remove underline */
-        color: #007bff;
-        /* Bootstrap primary color */
     }
 
-    .subcategory_ a:hover {
-        text-decoration: underline;
-        /* Underline on hover */
-        color: #0056b3;
-        /* Darker shade on hover */
+    .subcategories a:hover {
+        color: #007bff;
     }
 </style>

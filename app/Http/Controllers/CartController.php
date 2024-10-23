@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Category;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,12 +13,13 @@ class CartController extends Controller
 {
     public function index()
     {
+        $categories = Category::with('subcategories')->get();
         $cartCount = Cart::count();
         $cartItems = Cart::all();
         $products = $cartItems->map(function ($cartItem) {
             return $cartItem->product;
         });
-        return view('pages.users.cart', compact('cartCount', 'cartItems', 'products'));
+        return view('pages.users.cart', compact('cartCount', 'cartItems', 'products', 'categories'));
     }
 
     public function addToCart(Request $request)
@@ -48,7 +50,7 @@ class CartController extends Controller
                 'product_id' => $product->id,
                 'quantity' => $quantity,
                 'size' => $request->size,
-                'price' => $product->price,
+                'new_price' => $product->new_price,
                 'total_price' => $totalPrice,
             ]);
         }
@@ -76,6 +78,7 @@ class CartController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Quantity updated successfully!']);
     }
+
 
     public function chekout()
     {

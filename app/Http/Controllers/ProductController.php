@@ -70,7 +70,6 @@ class ProductController extends Controller
     public function show()
     {
         $products = Products::all();
-
         return view('pages.admin.product.show_products', compact('products'));
     }
 
