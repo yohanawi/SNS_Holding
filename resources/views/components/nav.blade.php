@@ -37,17 +37,55 @@
                                 <img class="me-1 dropdown-icon"
                                     src="https://img.icons8.com/?size=30&id=83986&format=png&color=000000" />Category
                             </a>
-                            <ul class="dropdown-menu" style="width: 900px;">
+                            <ul class="dropdown-menu dropdown-menu-end" style="width: 900px;">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         {{-- Category Items --}}
+                                        @foreach ($categories as $category)
+                                            <div class="category-item">
+                                                <a class="dropdown-item fw-bold" href="#"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#subcategories-{{ $category->id }}"
+                                                    aria-expanded="false">
+                                                    {{ $category->category }}
+                                                </a>
+                                                <div class="collapse" id="subcategories-{{ $category->id }}">
+                                                    <div class="subcategories">
+                                                        @foreach ($category->subcategories as $subcategory)
+                                                            <div class="mb-2 subcategory_ d-flex align-items-center">
+                                                                <img src="{{ $subcategory->image }}"
+                                                                    alt="{{ $subcategory->subcategory }}"
+                                                                    class="subcategory-image me-2"
+                                                                    style="width: 30px; height: 30px;">
+                                                                <a class="dropdown-item"
+                                                                    href="#">{{ $subcategory->name }}</a>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    <div class="col" style="margin-left: -25px;">
+                                    <div class="col-1">
                                         <div class="vl"></div>
                                     </div>
                                     <div class="col-8">
                                         <div class="row">
                                             {{-- Subcategory Items --}}
+                                            @foreach ($categories as $category)
+                                                <div class="mb-3 subcategory-item col-6">
+                                                    @foreach ($category->subcategories as $subcategory)
+                                                        <div class="mb-2 subcategory_ d-flex align-items-center">
+                                                            <img src="{{ $subcategory->image }}"
+                                                                alt="{{ $subcategory->subcategory }}"
+                                                                class="subcategory-image me-2"
+                                                                style="width: 30px; height: 30px;">
+                                                            <a class="dropdown-item"
+                                                                href="#">{{ $subcategory->name }}</a>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -86,15 +124,26 @@
                         </li>
 
                         <li class="nav-item ms-3 me-5">
-                            <a class="nav-link d-flex align-items-center" href="#" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal5">
-                                <img class="me-1"
-                                    src="https://img.icons8.com/?size=30&id=ABBSjQJK83zf&format=png&color=1A1A1A" />
-                                <span class="fw-bold" style="font-size: 12px;">
-                                    Sign in / Sign up<br />Orders & Account
+                            @if (Auth::check())
+                                <span class="nav-link d-flex align-items-center">
+                                    <img class="me-1" src="{{ url('images/user.png') }}" alt="User"
+                                        width="30" height="30" />
+                                    <span class="fw-bold" style="font-size: 12px;">
+                                        Welcome, {{ Auth::user()->name }}<br />Your Account
+                                    </span>
                                 </span>
-                            </a>
+                            @else
+                                <a class="nav-link d-flex align-items-center" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal5">
+                                    <img class="me-1"
+                                        src="https://img.icons8.com/?size=30&id=ABBSjQJK83zf&format=png&color=1A1A1A" />
+                                    <span class="fw-bold" style="font-size: 12px;">
+                                        Sign in / Sign up<br />Orders & Account
+                                    </span>
+                                </a>
+                            @endif
                         </li>
+
                     </div>
                 </ul>
 
@@ -121,28 +170,30 @@
                     data-bs-toggle="modal"></button>
             </div>
             <div class="p-4 rounded shadow-lg modal-body bg-body-tertiary">
-                <h5 class="mx-auto text-center modal-title" id="exampleModalLabel">Sign in / Sign up</h5>
+                <form action="" method="POST">
+                    <h5 class="mx-auto text-center modal-title" id="exampleModalLabel">Sign in / Sign up</h5>
 
-                <!-- Email input -->
-                <div class="mt-4 mb-3">
-                    <label for="emailInput" class="form-label">Enter Email</label>
-                    <input type="email" class="form-control" id="emailInput" placeholder="name@example.com"
-                        required>
-                </div>
+                    <!-- Email input -->
+                    <div class="mt-4 mb-3">
+                        <label for="emailInput" class="form-label">Enter Email</label>
+                        <input type="email" class="form-control" id="emailInput" placeholder="name@example.com"
+                            required>
+                    </div>
 
-                <!-- Password input (Initially hidden) -->
-                <div class="mt-4 mb-3" id="passwordContainer" style="display: none;">
-                    <label for="passwordInput" class="form-label">Enter Password</label>
-                    <input type="password" class="form-control" id="passwordInput" placeholder="Enter your password"
-                        required>
-                </div>
+                    <!-- Password input (Initially hidden) -->
+                    <div class="mt-4 mb-3" id="passwordContainer" style="display: none;">
+                        <label for="passwordInput" class="form-label">Enter Password</label>
+                        <input type="password" class="form-control" id="passwordInput"
+                            placeholder="Enter your password" required>
+                    </div>
 
-                <!-- Sign in button -->
-                <div class="d-flex justify-content-center">
-                    <button type="button" id="signInBtn" class="btn btn-warning w-50"
-                        style="border-radius: 150px;">Sign
-                        in</button>
-                </div>
+                    <!-- Sign in button -->
+                    <div class="d-flex justify-content-center">
+                        <button type="button" id="signInBtn" class="btn btn-warning w-50"
+                            style="border-radius: 150px;">Sign
+                            in</button>
+                    </div>
+                </form>
 
                 <p class="my-3 text-center">Or continue with</p>
 
@@ -227,3 +278,44 @@
         }
     });
 </script>
+
+<style>
+    .vl {
+        border-left: 1px solid #ddd;
+        /* Vertical line styling */
+        height: auto;
+        /* Automatic height */
+        margin: 0 15px;
+        /* Spacing around the line */
+    }
+
+    .subcategory-title {
+        font-weight: bold;
+        /* Make subcategory titles bold */
+        margin-bottom: 10px;
+        /* Space below the title */
+        color: #333;
+        /* Darker text color */
+    }
+
+    .subcategory_ {
+        padding: 5px;
+        /* Spacing around subcategory items */
+        transition: background-color 0.3s;
+        /* Smooth transition for hover */
+    }
+
+    .subcategory_ a {
+        text-decoration: none;
+        /* Remove underline */
+        color: #007bff;
+        /* Bootstrap primary color */
+    }
+
+    .subcategory_ a:hover {
+        text-decoration: underline;
+        /* Underline on hover */
+        color: #0056b3;
+        /* Darker shade on hover */
+    }
+</style>

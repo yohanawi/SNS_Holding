@@ -10,6 +10,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,7 @@ Route::get('/customer/dashboard', [CustomerController::class, 'index'])->middlew
 
 Route::get('/customer/cart', [CartController::class, 'index'])->name('customer.cart');
 Route::get('/customer/best-seller', [BestSellerController::class, 'index'])->name('customer.best_seller');
-Route::get('/customer/shop', [ShopController::class, 'index'])->name('customer.shop');
+Route::get('/customer/shop', [ShopController::class, 'show'])->name('customer.shop');
 
 
 Route::prefix('admin/product')->middleware(['auth', 'admin'])->group(function () {
@@ -78,3 +79,6 @@ Route::post('/customer/cart/remove', [CartController::class, 'remove'])->name('c
 
 Route::get('/customer/chekout', [CartController::class, 'chekout'])->name('customer.chekout');
 // Route::post('/customer/placeOrder', [CartController::class, 'placeOrder'])->name('customer.placeOrder');
+
+
+Route::post('/customer/review', [ReviewController::class, 'store'])->name('customer.review.store');

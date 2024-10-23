@@ -12,12 +12,10 @@
                     <div class="col text-end">
                         <span>
                             <span class="text-warning">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </span> (15 Reviews)
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa{{ $i <= $averageRating ? 's' : 'r' }} fa-star"></i>
+                                @endfor
+                            </span> ({{ $reviews->count() }} Reviews)
                         </span>
                     </div>
 
@@ -50,8 +48,8 @@
                         alt="product sub image" style="height: 160px; object-fit: cover;">
                     <img onclick="changeMainImage(this)" src="{{ asset('storage/' . $product->image02) }}" class="img-fluid"
                         alt="product sub image" style="height: 160px; object-fit: cover;">
-                    <img onclick="changeMainImage(this)" src="{{ asset('storage/' . $product->image03) }}" class="img-fluid"
-                        alt="product sub image" style="height: 160px; object-fit: cover;">
+                    <img onclick="changeMainImage(this)" src="{{ asset('storage/' . $product->image03) }}"
+                        class="img-fluid" alt="product sub image" style="height: 160px; object-fit: cover;">
                 </div>
             </div>
             <div class="col-md-6">
@@ -134,7 +132,8 @@
                     <button class="nav-link fs-3" data-toggle="tab" href="#menu2">Specification</button>
                 </li>
                 <li class="nav-items">
-                    <button class="nav-link fs-3" data-toggle="tab" href="#menu3">Reviews (15)</button>
+                    <button class="nav-link fs-3" data-toggle="tab" href="#menu3">Reviews
+                        ({{ $reviews->count() }})</button>
                 </li>
             </ul>
 
@@ -190,84 +189,132 @@
                 </div>
                 <div id="menu3" class="mt-3 tab-pane fade">
                     <p>Average Ratings</p>
-                    <h3>4.93</h3>
+                    <h3 class="text-left">{{ $averageRating }}</h3>
                     <span>
                         <span class="text-warning">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </span> <br />
-                        (15 Reviews)
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fa{{ $i <= $averageRating ? 's' : 'r' }} fa-star"></i>
+                            @endfor
+                        </span>
+                        ({{ $reviews->count() }} Reviews)
                     </span>
 
-                    <div>
-                        <ul>
-                            <li>5 Star</li>
-                            <li>4 Star</li>
-                            <li>3 Star</li>
-                            <li>2 Star</li>
-                            <li>1 Star</li>
+                    <div class="mt-2">
+                        <ul class="list-unstyled">
+                            @foreach ($ratingCounts as $star => $count)
+                                <li class="row">
+                                    <div class="col-5 d-flex justify-content-start align-items-center">
+                                        <span>{{ $star }} Star</span>
+                                        <div style="flex-grow: 1; margin: 0 10px;">
+                                            <div class="progress" style="width: 100%;">
+                                                <div class="progress-bar" role="progressbar"
+                                                    style="width: {{ $reviews->count() > 0 ? ($count / $reviews->count()) * 100 : 0 }}%;"
+                                                    aria-valuenow="{{ $count }}" aria-valuemin="0"
+                                                    aria-valuemax="{{ $reviews->count() }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" col"><span class="text-start">{{ $count }}</span></div>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
 
+
                     <div class="mb-3 bg-secondary ban" style="padding-top: 5px; padding-bottom: 2px;">
-                        <p class="mt-1 align-middle ms-3 fw-bolder fs-5">15 Reviews for this Product</p>
+                        <p class="mt-1 align-middle ms-3 fw-bolder fs-5">{{ $reviews->count() }} Reviews for this Product
+                        </p>
                     </div>
 
-                    <div class="ratings">
-                        <div class="row">
-                            <div class="col">
-                                <img src="{{ asset('storage/' . $product->image01) }}" alt="user"
-                                    style="width: 10%;">
-                            </div>
-                            <div class="justify-start col">
-                                <span class="text-warning">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </span><br />
-                                by <span class="text-primary">Yohan</span> | <span class="text-muted">April 9, 2021</span>
-                                <p>Comments</p>
-                            </div>
+                    <div id="reviewCarousel" class="mt-4 carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @forelse($reviews->chunk(5) as $index => $reviewChunk)
+                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                    <div class="text-center row justify-content-center">
+                                        @foreach ($reviewChunk as $review)
+                                            <div class="mx-2 mt-1 border col-md-2">
+                                                <img src="{{ asset('storage/' . $product->image01) }}" alt="user"
+                                                    class="mb-2 img-fluid rounded-circle"
+                                                    style="width: 80px; height: 80px;"><br />
+                                                <span class="text-warning">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                                                    @endfor
+                                                </span>
+                                                <br />
+                                                <strong class="mt-2 d-block">{{ $review->name }}</strong>
+                                                <span
+                                                    class="text-muted">{{ $review->created_at->format('F j, Y') }}</span>
+                                                <p class="mt-1 small">{{ $review->comment }}</p>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="carousel-item active">
+                                    <p class="text-center">No reviews yet. Be the first to review this product!</p>
+                                </div>
+                            @endforelse
                         </div>
+
+                        <!-- Carousel controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
 
-                    <div class="rating_form">
-                        <form action="#">
+                    <div class="mt-5 rating_form">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <form action="{{ route('customer.review.store') }}" method="POST">
+                            @csrf
                             <h6 class="text-uppercase">Submit your review</h6>
-                            <p>Your email address will not be published. Required fileds are marked <span
-                                    class="text-danger">*</span></p>
-
-                            <p>Your rating of this product <span class="text-danger">*</span>
-                                <span class="ms-3 text-warning">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </span>
+                            <p class="text-muted">Your email address will not be published. Required fields are marked
+                                <span class="text-danger">*</span>
                             </p>
+                            <p>Your rating of this product <span class="text-danger">*</span></p>
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <div class="rating-stars d-flex align-items-center">
+                                <input type="hidden" name="rating" id="rating" value="0">
+                                <span class="text-warning" id="stars">
+                                    <i class="far fa-star" data-star="1"></i>
+                                    <i class="far fa-star" data-star="2"></i>
+                                    <i class="far fa-star" data-star="3"></i>
+                                    <i class="far fa-star" data-star="4"></i>
+                                    <i class="far fa-star" data-star="5"></i>
+                                </span>
+                            </div>
 
-                            <textarea name="comment" id="comment" rows="6" class="form-control"
+                            <textarea name="comment" id="comment" rows="2" class="mt-3 form-control"
                                 placeholder="Write your review here... (optional)"></textarea>
+
                             <div class="mt-3 row">
                                 <div class="col">
                                     <input type="text" name="name" class="form-control" id="name"
-                                        placeholder="Your name">
+                                        placeholder="Your name" required>
                                 </div>
                                 <div class="col">
                                     <input type="email" name="email" class="form-control" id="email"
-                                        placeholder="Your email">
+                                        placeholder="Your email" required>
                                 </div>
                             </div>
 
                             <button type="submit" class="mt-3 mb-5 btn btn-warning">Submit Review</button>
                             <button type="reset" class="mt-3 mb-5 btn btn-secondary">Reset</button>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -284,6 +331,12 @@
         #stock-status {
             font-weight: bold;
             margin-top: 10px;
+        }
+
+        .rating-stars i {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 5px;
         }
     </style>
 @endpush
@@ -324,6 +377,28 @@
 
                 // Store the selected size in the hidden input field
                 document.getElementById('selected-size').value = this.getAttribute('data-size');
+            });
+        });
+    </script>
+
+    <script>
+        const stars = document.querySelectorAll('#stars i');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const starValue = this.getAttribute('data-star');
+                ratingInput.value = starValue;
+
+                // Highlight the stars up to the selected one
+                stars.forEach(s => {
+                    s.classList.remove('fas', 'text-warning');
+                    s.classList.add('far');
+                });
+                for (let i = 0; i < starValue; i++) {
+                    stars[i].classList.remove('far');
+                    stars[i].classList.add('fas', 'text-warning');
+                }
             });
         });
     </script>

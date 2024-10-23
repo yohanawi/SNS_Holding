@@ -3,14 +3,14 @@
 @section('content')
     <!--Hero section -->
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-        <div class="carousel-inner" id="carousel_banner" style="height: 500px">
+        <div class="carousel-inner" id="carousel_banner" style="height: 550px">
             <div class="carousel-item active">
                 <img src="{{ url('images/Banner01.jpg') }}" class="d-block w-100" alt="..."
-                    style="object-fit: cover; height: 500px;">
+                    style="object-fit: cover; height: 550px;">
             </div>
             <div class="carousel-item">
                 <img src="{{ url('images/Banner02.jpg') }}" class="d-block w-100" alt="..."
-                    style="object-fit: cover; height: 500px;">
+                    style="object-fit: cover; height: 550px;">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">

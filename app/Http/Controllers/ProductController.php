@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Products;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -68,6 +70,7 @@ class ProductController extends Controller
     public function show()
     {
         $products = Products::all();
+
         return view('pages.admin.product.show_products', compact('products'));
     }
 
@@ -142,9 +145,21 @@ class ProductController extends Controller
 
     public function quickView($id)
     {
+        $categories = Category::with('subcategories')->get();
         $product = Products::findOrFail($id);
+        $reviews = Review::where('product_id', $id)->latest()->get();
+        $averageRating = $reviews->avg('rating'); // This will return null if no reviews
+        $averageRating = is_null($averageRating) ? 0 : round($averageRating, 2);
 
-        return view('pages.users.quick_view', compact('product'));
+        $ratingCounts = [
+            5 => $reviews->where('rating', 5)->count(),
+            4 => $reviews->where('rating', 4)->count(),
+            3 => $reviews->where('rating', 3)->count(),
+            2 => $reviews->where('rating', 2)->count(),
+            1 => $reviews->where('rating', 1)->count(),
+        ];
+
+        return view('pages.users.quick_view', compact('product', 'categories', 'reviews', 'averageRating', 'ratingCounts'));
     }
 
     public function checkStock($id, $size)
