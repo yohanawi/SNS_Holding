@@ -114,7 +114,8 @@
                 <div class="gap-0 row">
                     <div class="mb-3 col-12 col-md-6 col-lg-4">
                         <div class="bg-black position-relative" style="height: 315px;">
-                            <a href="#" class="d-flex justify-content-center align-items-center column-hover"
+                            <a href="{{ route('customer.shop') }}"
+                                class="d-flex justify-content-center align-items-center column-hover"
                                 style="height: 100%; width: 100%; position: relative;">
                                 <img src="{{ url('images/Banner03.jpg') }}" alt="Cover Image"
                                     class="img-fluid banner-grid w-100 h-100" style="object-fit: cover;">
@@ -128,7 +129,8 @@
 
                     <div class="mb-3 col-12 col-md-6 col-lg-4">
                         <div class="bg-black position-relative" style="height: 315px;">
-                            <a href="#" class="d-flex justify-content-center align-items-center column-hover"
+                            <a href="{{ route('customer.shop') }}"
+                                class="d-flex justify-content-center align-items-center column-hover"
                                 style="height: 100%; width: 100%; position: relative;">
                                 <img src="{{ url('images/Banner05.jpg') }}" alt="Cover Image"
                                     class="img-fluid banner-grid w-100 h-100" style="object-fit: cover;">
@@ -142,7 +144,8 @@
 
                     <div class="mb-3 col-12 col-md-6 col-lg-4">
                         <div class="bg-black position-relative" style="height: 315px;">
-                            <a href="#" class="d-flex justify-content-center align-items-center column-hover"
+                            <a href="{{ route('customer.shop') }}"
+                                class="d-flex justify-content-center align-items-center column-hover"
                                 style="height: 100%; width: 100%; position: relative;">
                                 <img src="{{ url('images/Banner07.jpg') }}" alt="Cover Image"
                                     class="img-fluid banner-grid w-100 h-100" style="object-fit: cover;">
@@ -159,22 +162,49 @@
 
         <section class="mt-5">
             <div class="container mb-5 text-center">
-                <h2 class="text-uppercase">Categories</h2>
+                <h2 class="mb-4 text-uppercase">Categories</h2>
                 <section>
                     <div class="mt-4">
-                        <div style="--width: 5%;" id="categoryCarousel" class="carousel slide" data-bs-ride="carousel"
+                        <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel"
                             data-bs-interval="3000">
                             <div class="carousel-inner">
-                                <!-- category card -->
+                                @foreach ($categories->chunk(5) as $index => $categoryChunk)
+                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                        <div class="row justify-content-center">
+                                            @foreach ($categoryChunk as $category)
+                                                <div class="mx-2 col-md-2 d-flex justify-content-center">
+                                                    <div class="text-center shadow-sm card"
+                                                        style="width: 12rem; border-radius: 20px; cursor: pointer;"
+                                                        onclick="window.location.href='#'">
+                                                        {{-- <!--{{ route('category.show', $category->id) }}--> --}}
+                                                        <div class="p-3">
+                                                            <img src="{{ asset('storage/' . $category->image) }}"
+                                                                class="rounded-circle img-fluid"
+                                                                style="width: 100px; height: 100px; object-fit: cover;"
+                                                                alt="{{ $category->category }}">
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h6 class="card-title text-uppercase text-truncate">
+                                                                {{ $category->category }}</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
+
                             <button class="carousel-control-prev" type="button" data-bs-target="#categoryCarousel"
                                 data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="p-2 carousel-control-prev-icon bg-dark rounded-circle"
+                                    aria-hidden="true"></span>
                                 <span class="visually-hidden">Previous</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#categoryCarousel"
                                 data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="p-2 carousel-control-next-icon bg-dark rounded-circle"
+                                    aria-hidden="true"></span>
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
