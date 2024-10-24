@@ -82,6 +82,7 @@ class CartController extends Controller
 
     public function chekout()
     {
+        $categories = Category::with('subcategories')->get();
         $userId = Auth::id();
         $cartItems = Cart::with('product')->where('user_id', $userId)->get();
 
@@ -89,6 +90,25 @@ class CartController extends Controller
             return redirect()->route('customer.cart')->with('error', 'Your cart is empty.');
         }
 
-        return view('pages.users.checkout', compact('cartItems'));
+        return view('pages.users.checkout', compact('cartItems', 'categories'));
+    }
+
+    public function storeTotal(Request $request)
+    {
+        $validated = $request->validate([
+            'total_price' => 'required|numeric',
+        ]);
+
+        // Assuming there's a Cart model and the user is authenticated
+        $cart = Cart::where('user_id', auth()->id())->first();
+
+        if ($cart) {
+            $cart->total_price = $validated['total_price'];
+            $cart->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 400);
     }
 }

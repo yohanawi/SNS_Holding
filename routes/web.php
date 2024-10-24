@@ -8,9 +8,11 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +81,9 @@ Route::post('/customer/cart/remove', [CartController::class, 'remove'])->name('c
 
 Route::get('/customer/chekout', [CartController::class, 'chekout'])->name('customer.chekout');
 // Route::post('/customer/placeOrder', [CartController::class, 'placeOrder'])->name('customer.placeOrder');
+Route::post('/customer/checkout/shippingaddress', [ShippingAddressController::class, 'store'])->name('customer.checkout.shipping');
+Route::get('/customer/checkout/placeorder', [PaymentController::class, 'placeorder'])->name('customer.checkout.placeorder');
 
 
 Route::post('/customer/review', [ReviewController::class, 'store'])->name('customer.review.store');
+Route::post('/customer/cart/store-total', [CartController::class, 'storeTotal'])->name('customer.cart.storeTotal');

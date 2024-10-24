@@ -123,6 +123,34 @@
             });
         });
 
+
+        document.querySelector('.btn-lg').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default redirect
+
+            const estimatedTotal = document.getElementById('estimated-total').textContent.replace('$', '');
+
+            fetch('{{ route('customer.cart.storeTotal') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        total_price: estimatedTotal
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '{{ route('customer.chekout') }}'; // Redirect after saving
+                    } else {
+                        alert('Failed to save the total. Try again.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+
         // Select All checkbox functionality
         document.getElementById('selectAll').addEventListener('change', function() {
             const isChecked = this.checked;
