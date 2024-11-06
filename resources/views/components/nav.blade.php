@@ -144,140 +144,17 @@
             </div>
         </div>
     </nav>
-
 </header>
 
-<!-- Modal 04 -->
-<!-- Modal 04 -->
-<div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close rotate-on-hover" data-bs-target="#exampleModalToggle2"
-                    data-bs-toggle="modal"></button>
-            </div>
-            <div class="p-4 rounded shadow-lg modal-body bg-body-tertiary">
-                <form action="" method="POST">
-                    <h5 class="mx-auto text-center modal-title" id="exampleModalLabel">Sign in / Sign up</h5>
-
-                    <!-- Email input -->
-                    <div class="mt-4 mb-3">
-                        <label for="emailInput" class="form-label">Enter Email</label>
-                        <input type="email" class="form-control" id="emailInput" placeholder="name@example.com"
-                            required>
-                    </div>
-
-                    <!-- Password input (Initially hidden) -->
-                    <div class="mt-4 mb-3" id="passwordContainer" style="display: none;">
-                        <label for="passwordInput" class="form-label">Enter Password</label>
-                        <input type="password" class="form-control" id="passwordInput"
-                            placeholder="Enter your password" required>
-                    </div>
-
-                    <!-- Sign in button -->
-                    <div class="d-flex justify-content-center">
-                        <button type="button" id="signInBtn" class="btn btn-warning w-50"
-                            style="border-radius: 150px;">Sign
-                            in</button>
-                    </div>
-                </form>
-
-                <p class="my-3 text-center">Or continue with</p>
-
-                <!-- Social buttons -->
-                <div class="gap-3 d-flex justify-content-center">
-                    <!-- Google Button -->
-                    <a href="#" class="social-btn">
-                        <img src="{{ url('images/google.png') }}" alt="" width="40" height="40">
-                    </a>
-
-                    <!-- Facebook Button -->
-                    <a href="#" class="social-btn">
-                        <img src="{{ url('images/facebook.png') }}" alt="" width="40" height="40">
-                    </a>
-
-                    <!-- Instagram Button -->
-                    <a href="#" class="social-btn">
-                        <img src="{{ url('images/instagram.png') }}" alt="" width="40" height="40">
-                    </a>
-
-                    <!-- Twitter Button -->
-                    <a href="#" class="social-btn">
-                        <img src="{{ url('images/twitter.png') }}" alt="" width="40" height="40">
-                    </a>
-                </div>
-
-                <p class="mt-4 text-center" style="font-size: 14px">By continuing, you agree to our <a
-                        href="#">Terms of Use</a>
-                    and <a href="#">Privacy Policy</a>.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Second Modal -->
-<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
-    tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close rotate-on-hover" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="p-4 text-center modal-body">
-                <h1 class="mb-4 modal-title fs-4" id="exampleModalToggleLabel2">Enjoy these special offers after
-                    signing in! Are you sure you want to leave now?</h1>
-
-                <div class="mt-4 row g-3">
-                    <div class="col">
-                        <button class="btn btn-outline-secondary w-100 fw-bold text-dark" data-bs-dismiss="modal"
-                            style="border-radius: 200px">Leave</button>
-                    </div>
-                    <div class="col">
-                        <button class="btn btn-outline-primary w-100 fw-bold text-dark"
-                            data-bs-target="#exampleModal5" data-bs-toggle="modal"
-                            style="border-radius: 200px">Continue</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Add this JavaScript to handle the email submission and show the password field -->
 <script>
-    document.getElementById('signInBtn').addEventListener('click', function() {
-        var emailInput = document.getElementById('emailInput').value;
-
-        if (emailInput) {
-            // Check if the email is valid (basic validation)
-            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (emailPattern.test(emailInput)) {
-                // Show the password input field
-                document.getElementById('passwordContainer').style.display = 'block';
-                document.getElementById('signInBtn').innerText = 'Continue';
-            } else {
-                alert('Please enter a valid email address.');
-            }
-        } else {
-            alert('Please enter your email.');
-        }
-    });
-
-
-
-
     document.querySelectorAll('.category-item').forEach(item => {
         item.addEventListener('mouseenter', (event) => {
             const categoryId = event.currentTarget.dataset.categoryId;
 
-            // Hide all other subcategory divs
             document.querySelectorAll('.subcategories').forEach(subcat => {
                 subcat.classList.remove('show');
             });
 
-            // Show the relevant subcategory div
             const targetSubcategory = document.getElementById(`subcategories-${categoryId}`);
             if (targetSubcategory) {
                 targetSubcategory.classList.add('show');
@@ -314,7 +191,6 @@
 
     .subcategories img:hover {
         transform: scale(1.1);
-        /* Zoom effect on hover */
     }
 
     .subcategories a {

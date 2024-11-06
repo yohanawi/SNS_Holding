@@ -40,46 +40,7 @@
                 <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
                     <div class="carousel-inner">
                         <!-- product card -->
-                        <div class="container mt-3 d-flex justify-content-center">
-                            <div class="card product-card" style="width: 20rem;">
-                                <div class="stock-badge">Only 2 left</div>
-                                <img src="{{ url('images/Cover Linkedin.png') }}"
-                                    class="object-cover card-img-top product-img" alt="Product Image"
-                                    style="width:100%;  height: 250px">
-
-                                <div class="card-body">
-                                    <h6 class="card-title">Flexible Desk Lamp Clip</h6>
-                                    <p class="price" style=" font-size: 1rem; color: #f76c6c;">$7.64
-                                        <span class="old-price"
-                                            style=" text-decoration: line-through; color: #888; margin-left: 8px;">$50.54</span>
-                                        <span class="discount"
-                                            style="color: #f76c6c;  font-weight: bold; margin-left: 5px;">-84%</span>
-                                    </p>
-                                    <p class="mb-1">47 sold</p>
-
-                                    <div class="mb-1">
-                                        <div class="progress" style="height: 5px;">
-                                            <div class="progress-bar" role="progressbar" style="width: 90%;"
-                                                aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-1">
-                                        <span class="rating" style="color: gold;">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star"></i>
-                                        </span>
-                                        <span>(5)</span>
-                                    </div>
-
-                                    {{-- <div class="countdown">01:20:40:46</div> --}}
-                                </div>
-                            </div>
-                        </div>
-
+                        @include('partial.tranding_card')
                     </div>
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
@@ -172,11 +133,11 @@
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                         <div class="row justify-content-center">
                                             @foreach ($categoryChunk as $category)
-                                                <div class="mx-2 col-md-2 d-flex justify-content-center">
+                                                <div
+                                                    class="mb-4 col-6 col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center">
                                                     <div class="text-center shadow-sm card"
                                                         style="width: 12rem; border-radius: 20px; cursor: pointer;"
                                                         onclick="window.location.href='#'">
-                                                        {{-- <!--{{ route('category.show', $category->id) }}--> --}}
                                                         <div class="p-3">
                                                             <img src="{{ asset('storage/' . $category->image) }}"
                                                                 class="rounded-circle img-fluid"
@@ -195,6 +156,7 @@
                                 @endforeach
                             </div>
 
+                            <!-- Carousel Controls -->
                             <button class="carousel-control-prev" type="button" data-bs-target="#categoryCarousel"
                                 data-bs-slide="prev">
                                 <span class="p-2 carousel-control-prev-icon bg-dark rounded-circle"
@@ -212,6 +174,7 @@
                 </section>
             </div>
         </section>
+
 
         <!--product card -->
         <section>

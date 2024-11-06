@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BestSellerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
